@@ -5,10 +5,10 @@ import {useParams} from "react-router";
 
 function Product()
 {
-    const URLparameter = useParams(); 
+    const productId = useParams(); 
 
     return (
-        <p>{URLparameter}</p>
+        <p>{productId}</p>
     );
     // const [products, setProduct] = useState([]); 
     // useEffect(() => { 
