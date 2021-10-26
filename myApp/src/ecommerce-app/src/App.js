@@ -5,28 +5,51 @@ import Footer from './components/footer';
 import {Education} from './components/multipleComponents';
 import ContactInfo from './components/multipleComponents';
 import {BrowserRouter, Route} from "react-router-dom";
-// import Commerce from "./commerce-app/node_modules/@chec/commerce.js";
-import Commerce from "@chec/commerce.js";
-import { useState } from 'react';
+// import Commerce from "./commerce-app/node_modules/@chec/commerce.js"
+// import { commerce } from './lib/commerce';
+// import { useEffect, useState } from 'react';
+import Products from './components/Products/products';
+import Product from './components/Products/product';
+// import {useParams} from "react-router"
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const commerce = new Commerce(process, true);
-  commerce.products.list().then(result => {
-    console.log("Retrieved the result");
-    setProducts(result.data);
-  });
+  // const [products, setProducts] = useState([]);
+
+  // useEffect(() => {
+  //     commerce.products.list().then(result => {
+  //     console.log("Retrieved the result");
+  //     setProducts(result.data);
+  //     });
+  // });
 
   return (
     <div className="App">
       <main>
-        <h1>COSC 631</h1>
-        {
+        {/* {
+          products.length === 0 && <p> Loading...</p>
+        } */}
+
+        {/* {        
+            products.map((product) => {
+            return <a key ={product.id} > <img src={product.image.url} alt={product.name} /> </a>
+            })
+        } */}
+        
+        {/* {
           products.map((product) => {
-            return <p>{product.name}</p>
+            return <p key={product.id}>{product.name}</p>
           })
-        }
+        } */}
+        <h1>COSC 631</h1>
         <BrowserRouter>
+        <Route path="/products">
+            <Products/>
+          </Route>
+
+          <Route path="/product/:productId">
+            <Product/>
+          </Route>
+
           <Route path="/multipleComponents">
             <Bold/>
           </Route>
@@ -41,6 +64,9 @@ function App() {
             <Footer/>
           </Route>
 
+          <header>
+          <h3>Products names: </h3>
+        </header>
         </BrowserRouter>
       </main>
       <header className="App-header">
@@ -66,3 +92,4 @@ function App() {
 }
 
 export default App;
+
