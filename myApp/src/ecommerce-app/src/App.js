@@ -40,7 +40,7 @@ function App() {
             return <p key={product.id}>{product.name}</p>
           })
         } */}
-        <h1>COSC 631</h1>
+        <h1>COSC 631 eCommerce</h1>
         <BrowserRouter>
         <Route path="/products">
             <Products/>
@@ -64,9 +64,9 @@ function App() {
             <Footer/>
           </Route>
 
-          <header>
+          {/* <header>
           <h3>Products names: </h3>
-        </header>
+        </header> */}
         </BrowserRouter>
       </main>
       <header className="App-header">
