@@ -1,74 +1,70 @@
 import logo from './logo.svg';
 import './App.css';
-import {Bold} from './components/multipleComponents';
+import { Bold } from './components/multipleComponents';
 import Footer from './components/footer';
-import {Education} from './components/multipleComponents';
+import { Education } from './components/multipleComponents';
 import ContactInfo from './components/multipleComponents';
-import {BrowserRouter, Route} from "react-router-dom";
-// import Commerce from "./commerce-app/node_modules/@chec/commerce.js"
-// import { commerce } from './lib/commerce';
-// import { useEffect, useState } from 'react';
+import { BrowserRouter, Route } from "react-router-dom";
 import Products from './components/Products/products';
 import Product from './components/Products/product';
-// import {useParams} from "react-router"
+import Navbar from './components/navbar';
+import { Grid } from "@material-ui/core";
 
 function App() {
-  // const [products, setProducts] = useState([]);
-
-  // useEffect(() => {
-  //     commerce.products.list().then(result => {
-  //     console.log("Retrieved the result");
-  //     setProducts(result.data);
-  //     });
-  // });
 
   return (
     <div className="App">
-      <main>
-        {/* {
-          products.length === 0 && <p> Loading...</p>
-        } */}
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <header>
+            <Navbar />
+          </header>
+        </Grid>
 
-        {/* {        
-            products.map((product) => {
-            return <a key ={product.id} > <img src={product.image.url} alt={product.name} /> </a>
-            })
-        } */}
-        
-        {/* {
-          products.map((product) => {
-            return <p key={product.id}>{product.name}</p>
-          })
-        } */}
-        <h1>COSC 631 eCommerce</h1>
-        <BrowserRouter>
-        <Route path="/products">
-            <Products/>
-          </Route>
 
-          <Route path="/product/:productId">
-            <Product/>
-          </Route>
+        <Grid item container>
+          <Grid item xs={false} sm={1} md={2}></Grid>
 
-          <Route path="/multipleComponents">
-            <Bold/>
-          </Route>
+          <Grid item xs={12} sm={10} md={8} >
+            <main>
+              <h1>COSC 631 eCommerce</h1>
 
-          <Route path="/multipleComponents">
-            <Education/>
-          </Route>
 
-          <ContactInfo/>
 
-          <Route path="/footer">
-            <Footer/>
-          </Route>
+              <BrowserRouter>
+                <Route path="/products">
+                  <Products />
+                </Route>
 
-          {/* <header>
-          <h3>Products names: </h3>
-        </header> */}
-        </BrowserRouter>
-      </main>
+                <Route path="/product/:productId">
+                  <Product />
+                </Route>
+              </BrowserRouter>
+
+
+              <BrowserRouter>
+                <Route path="/multipleComponents">
+                  <Bold />
+                </Route>
+
+                <Route path="/multipleComponents">
+                  <Education />
+                </Route>
+
+                <Route path="/footer">
+                  <Footer />
+                </Route>
+              </BrowserRouter>
+
+              <ContactInfo />
+            </main>
+          </Grid>
+
+          <Grid item xs={false} sm={1} md={2}></Grid>
+        </Grid>
+      </Grid>
+
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         {/* <p>
@@ -87,7 +83,7 @@ function App() {
           CV
         </a>
       </header>
-    </div>
+    </div >
   );
 }
 
