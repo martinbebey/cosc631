@@ -4,20 +4,42 @@ import { Bold } from './components/multipleComponents';
 import Footer from './components/footer';
 import { Education } from './components/multipleComponents';
 import ContactInfo from './components/multipleComponents';
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Products from './components/Products/products';
 import Product from './components/Products/product';
 import Navbar from './components/navbar';
-import { Grid } from "@material-ui/core";
+import { Grid} from "@material-ui/core";
+import { useEffect, useState } from 'react';
+import { commerce } from './lib/commerce';
+import Cart from './components/cart/cart';
 
 function App() {
+
+  const [cart, setCart] = useState({});
+  useEffect(() => {
+    commerce.cart.retrieve().then(
+      (response) => {
+        console.log(response);
+        setCart(response)
+      }
+    );
+  }, []);
+
+  const handleAddToCart = (productId, quantity) => {
+    commerce.cart.add(productId, quantity).then(
+      (response) => {
+        console.log(response);
+        setCart(response.cart);
+      }
+    );
+  }
 
   return (
     <div className="App">
       <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <header>
-            <Navbar />
+            <Navbar cartItems={cart.total_items} />
           </header>
         </Grid>
 
@@ -32,28 +54,36 @@ function App() {
 
 
               <BrowserRouter>
-                <Route path="/products">
-                  <Products />
-                </Route>
+                <Switch>
+                  <Route exact path="/products">
+                    <Products />
+                  </Route>
 
-                <Route path="/product/:productId">
-                  <Product />
-                </Route>
+                  <Route exact path="/product/:productId">
+                    <Product handleAddToCart={handleAddToCart} />
+                  </Route>
+
+                  <Route exact path="/cart">
+                    <Cart cart={cart}/>
+                  </Route>
+                </Switch>
               </BrowserRouter>
 
 
               <BrowserRouter>
-                <Route path="/multipleComponents">
-                  <Bold />
-                </Route>
+                <Switch>
+                  <Route path="/multipleComponents">
+                    <Bold />
+                  </Route>
 
-                <Route path="/multipleComponents">
-                  <Education />
-                </Route>
+                  <Route path="/multipleComponents">
+                    <Education />
+                  </Route>
 
-                <Route path="/footer">
-                  <Footer />
-                </Route>
+                  <Route path="/footer">
+                    <Footer />
+                  </Route>
+                </Switch>
               </BrowserRouter>
 
               <ContactInfo />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { commerce } from './../../lib/commerce';
 import { Card, CardActionArea, CardMedia, Grid } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles({
     media: {
@@ -18,7 +18,6 @@ function Products() {
             setProducts(result.data);
         });
     });
-
 
     return (
         <Grid container spacing={2}>

@@ -5,8 +5,9 @@ import { Grid } from '@material-ui/core';
 import './../../App.css';
 import "react-image-gallery/styles/css/image-gallery.css";
 import ImageGallery from 'react-image-gallery';
+import { Button } from "@material-ui/core";
 
-function Product() {
+function Product({ handleAddToCart }) {
     const { productId } = useParams();
     const [product, setProduct] = useState([]);
     useEffect(() => {
@@ -29,11 +30,11 @@ function Product() {
                                 <ImageGallery items={
                                     product.assets.map(
                                         (image) => {
-                                            return {original: image.url};
+                                            return { original: image.url };
                                         }
                                     )
-                                } showPlayButton ={false} />
-{/* 
+                                } showPlayButton={false} />
+                                {/* 
                                 {
                                     product.assets.map((image) => {
                                         return <img key={image.id} src={image.url} alt={image.filename} width="200" />
@@ -46,6 +47,14 @@ function Product() {
                             <header>
                                 <p>{product.name}</p>
                             </header>
+                            <h5>price: {product.price.formatted_with_symbol}</h5>
+                            <Button onClick={
+                                () => {
+                                    handleAddToCart(product.id, 1);
+                                }
+                            }>
+                                Add to cart
+                            </Button>
                             <header>
                                 <div dangerouslySetInnerHTML={{ __html: product.description }} />
                             </header>
