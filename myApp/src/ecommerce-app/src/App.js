@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Products from './components/Products/products';
 import Product from './components/Products/product';
 import Navbar from './components/navbar';
-import { Grid} from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { useEffect, useState } from 'react';
 import { commerce } from './lib/commerce';
 import Cart from './components/cart/cart';
@@ -27,6 +27,33 @@ function App() {
 
   const handleAddToCart = (productId, quantity) => {
     commerce.cart.add(productId, quantity).then(
+      (response) => {
+        console.log(response);
+        setCart(response.cart);
+      }
+    );
+  }
+
+  const handleUpdateProductQuantity = (productId, quantity) => {
+    commerce.cart.update(productId, {quantity: quantity}).then(
+      response => {
+        console.log(response);
+        setCart(response.cart);
+      }
+    );
+  }
+
+  const handleRemoveFromCart = (productId) => {
+    commerce.cart.remove(productId).then(
+      response => {
+        console.log(response);
+        setCart(response.cart);
+      }
+    );
+  }
+
+  const emptyCart = () => {
+    commerce.cart.empty().then(
       (response) => {
         console.log(response);
         setCart(response.cart);
@@ -64,7 +91,8 @@ function App() {
                   </Route>
 
                   <Route exact path="/cart">
-                    <Cart cart={cart}/>
+                    <Cart cart={cart} handleUpdateProductQuantity={handleUpdateProductQuantity}
+                      emptyCart={emptyCart} handleRemoveFromCart={handleRemoveFromCart} />
                   </Route>
                 </Switch>
               </BrowserRouter>

@@ -17,7 +17,7 @@ function Products() {
             console.log("Retrieved the result");
             setProducts(result.data);
         });
-    });
+    }, []);
 
     return (
         <Grid container spacing={2}>

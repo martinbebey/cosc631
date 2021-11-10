@@ -1,4 +1,7 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import { Button, Grid, makeStyles } from "@material-ui/core";
+// import { useEffect, useState } from 'react';
+// import { commerce } from './../../lib/commerce';
+// import { useParams } from "react-router";
 
 const useStyles = makeStyles({
     image: {
@@ -19,7 +22,7 @@ const useStyles = makeStyles({
     },
 });
 
-function CartItem({ cartItem }) {
+function CartItem({ cartItem, handleUpdateProductQuantity, handleRemoveFromCart}) {
     const classes = useStyles();
 
     return (
@@ -41,6 +44,32 @@ function CartItem({ cartItem }) {
 
                 <Grid item >
                     <b>Price:</b> {cartItem.line_total.formatted_with_symbol}
+                </Grid>
+
+                <Grid item>
+                    <Button onClick={
+                        () => {
+                            handleUpdateProductQuantity(cartItem.id, cartItem.quantity - 1);
+                        }
+                    }>
+                        -
+                    </Button>
+
+                    <Button onClick={
+                        () => {
+                            handleUpdateProductQuantity(cartItem.id, cartItem.quantity + 1);
+                        }
+                    }>
+                        +
+                    </Button>
+
+                    <Button onClick={
+                        () => {
+                            handleRemoveFromCart(cartItem.id);
+                        }
+                    }>
+                        REMOVE
+                    </Button>
                 </Grid>
 
             </Grid>
