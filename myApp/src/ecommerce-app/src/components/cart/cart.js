@@ -33,6 +33,10 @@ function Cart({ cart, handleUpdateProductQuantity, handleRemoveFromCart, emptyCa
                 }>
                     EMPTY CART
                 </Button>
+
+                <Button href="/checkout">
+                    Checkout
+                </Button>
             </Grid>
         </Grid>
     );
