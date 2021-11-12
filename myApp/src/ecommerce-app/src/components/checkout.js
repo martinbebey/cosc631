@@ -26,6 +26,10 @@ function Checkout({ cart }) {
                 <p>Submission summary:</p>
                 {shippingInfo["country"] && <p>country: {shippingInfo["country"]}</p>}
                 {shippingInfo["name"] && <p>name: {shippingInfo["name"]}</p>}
+                {shippingInfo["zip"] && <p>zip: {shippingInfo["zip"]}</p>}
+                {shippingInfo["phone"] && <p>phone: {shippingInfo["phone"]}</p>}
+                {shippingInfo["city"] && <p>city: {shippingInfo["city"]}</p>}
+                {shippingInfo["address"] && <p>address: {shippingInfo["address"]}</p>}
             </Grid>
 
             <Grid item>

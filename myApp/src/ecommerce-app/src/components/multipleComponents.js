@@ -2,7 +2,7 @@ function ContactInfo()
 {
     return (
     
-        <p style={{color:"red"}}>
+        <p style={{color:"magenta"}}>
             Contact: bcyrille@emich.edu
         </p>
     );
