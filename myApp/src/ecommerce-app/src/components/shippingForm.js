@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { commerce } from "./../lib/commerce";
 import { Button, MenuItem, Select, TextField } from "@material-ui/core";
 import ReactPhoneInput from "react-phone-input-material-ui";
 
 function ShippingForm({ checkoutToken, setShippingInfo }) {
-    const [country, setCountry] = useState("USA");
+    const [country, setCountry] = useState("");
+    const [countries, setCountries] = useState(undefined);
+    const [region, setRegion] = useState("");
+    const [regions, setRegions] = useState(undefined);
+    const [shippingMethod, setShippingMethod] = useState("");
+    const [shippingMethods, setShippingMethods] = useState(undefined);
     const [name, setName] = useState("");
     const [nameError, setNameError] = useState(false);
     const [nameHelper, setNameHelper] = useState("");
@@ -25,7 +31,40 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
     const [addressEntryIsValid, setAddressEntryIsValid] = useState(false);
     const [zipEntryIsValid, setZipEntryIsValid] = useState(false);
 
+    useEffect(() => {
+        if (checkoutToken) {
+            commerce.services.localeListShippingCountries(checkoutToken).then((response) => {
+                setCountries(response["countries"]);
+                setCountry(Object.keys(response["countries"])[0]);
+            });
+        }
+    }, [checkoutToken]);
+
+    useEffect(() => {
+        if (country) {
+            commerce.services.localeListShippingSubdivisions(checkoutToken, country).then((response) => {
+                setRegions(response["subdivisions"]);
+                setRegion(Object.keys(response["subdivisions"])[0]);
+            });
+        }
+    }, [checkoutToken, country]);
+
+    useEffect(() => {
+        if (country && region) {
+            commerce.checkout.getShippingOptions(checkoutToken, { "country": country, "region]": region }).then((response) => {
+                setShippingMethods(response);
+                setShippingMethod(response[0].description);
+            });
+        }
+    }, [checkoutToken, country, region]);
+
     console.log(checkoutToken);
+    console.log(countries);
+    console.log(country);
+    console.log(regions);
+    console.log(region);
+    console.log(shippingMethods);
+    console.log(shippingMethod);
 
     const onNameFieldUnfocused = (event) => {
         if (!name) {
@@ -158,12 +197,39 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             </p>
 
             <p>
-                <Select
+                {country && countries && <Select
                     value={country}
                     onChange={(event) => { console.log(event); setCountry(event.target.value) }}>
-                    <MenuItem value="USA"> USA </MenuItem>
-                    <MenuItem value="China"> China </MenuItem>
-                </Select>
+                    {
+                        Object.keys(countries).map((countryCode) => {
+                            return <MenuItem value={countryCode} key={countryCode}>{countries[countryCode]}</MenuItem>
+                        })
+                    }
+                </Select>}
+            </p>
+
+            <p>
+                {region && regions && <Select
+                    value={region}
+                    onChange={(event) => { console.log(event); setRegion(event.target.value) }}>
+                    {
+                        Object.keys(regions).map((regionCode) => {
+                            return <MenuItem value={regionCode} key={regionCode}>{regions[regionCode]}</MenuItem>
+                        })
+                    }
+                </Select>}
+            </p>
+
+            <p>
+                {shippingMethod && shippingMethods && <Select
+                    value={shippingMethod}
+                    onChange={(event) => { console.log(event); setShippingMethod(event.target.value) }}>
+                    {
+                        shippingMethods.map((method) => {
+                            return <MenuItem value={method["description"]} key={method["id"]}>{method["description"]}</MenuItem>
+                        })
+                    }
+                </Select>}
             </p>
 
             <p>
@@ -181,7 +247,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                 <Button onClick={
                     () => {
 
-                        if (phoneEntryIsValid && nameEntryIsValid && cityEntryIsValid 
+                        if (phoneEntryIsValid && nameEntryIsValid && cityEntryIsValid
                             && addressEntryIsValid && zipEntryIsValid) {
                             setShippingInfo({
                                 "name": name,
@@ -189,6 +255,8 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                                 "address": address,
                                 "city": city,
                                 "country": country,
+                                "region": region,
+                                "shipping": shippingMethod,
                                 "zip": zipCode
                             });
                         }

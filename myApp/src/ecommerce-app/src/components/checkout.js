@@ -30,6 +30,8 @@ function Checkout({ cart }) {
                 {shippingInfo["phone"] && <p>phone: {shippingInfo["phone"]}</p>}
                 {shippingInfo["city"] && <p>city: {shippingInfo["city"]}</p>}
                 {shippingInfo["address"] && <p>address: {shippingInfo["address"]}</p>}
+                {shippingInfo["region"] && <p>region: {shippingInfo["region"]}</p>}
+                {shippingInfo["shipping"] && <p>shipping: {shippingInfo["shipping"]}</p>}
             </Grid>
 
             <Grid item>
