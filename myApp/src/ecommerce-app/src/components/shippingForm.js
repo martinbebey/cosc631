@@ -13,6 +13,9 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
     const [name, setName] = useState("");
     const [nameError, setNameError] = useState(false);
     const [nameHelper, setNameHelper] = useState("");
+    const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState(false);
+    const [emailHelper, setEmailHelper] = useState("");
     const [phone, setPhone] = useState("");
     const [phoneError, setPhoneError] = useState(false);
     const [phoneHelper, setPhoneHelper] = useState("");
@@ -27,6 +30,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
     const [zipCodeHelper, setZipCodeHelper] = useState("");
     const [phoneEntryIsValid, setPhoneEntryIsValid] = useState(false);
     const [nameEntryIsValid, setNameEntryIsValid] = useState(false);
+    const [emailEntryIsValid, setEmailEntryIsValid] = useState(false);
     const [cityEntryIsValid, setCityEntryIsValid] = useState(false);
     const [addressEntryIsValid, setAddressEntryIsValid] = useState(false);
     const [zipEntryIsValid, setZipEntryIsValid] = useState(false);
@@ -58,13 +62,13 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
         }
     }, [checkoutToken, country, region]);
 
-    console.log(checkoutToken);
-    console.log(countries);
-    console.log(country);
-    console.log(regions);
-    console.log(region);
-    console.log(shippingMethods);
-    console.log(shippingMethod);
+    // console.log(checkoutToken);
+    // console.log(countries);
+    // console.log(country);
+    // console.log(regions);
+    // console.log(region);
+    // console.log(shippingMethods);
+    // console.log(shippingMethod);
 
     const onNameFieldUnfocused = (event) => {
         if (!name) {
@@ -77,6 +81,20 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             setNameError(false);
             setNameHelper("");
             setNameEntryIsValid(true);
+        }
+    }
+
+    const onEmailFieldUnfocused = (event) => {
+        if (!email) {
+            setEmailError(true);
+            setEmailHelper("Please provide an email");
+            setEmailEntryIsValid(false);
+        }
+
+        else {
+            setEmailError(false);
+            setEmailHelper("");
+            setEmailEntryIsValid(true);
         }
     }
 
@@ -158,6 +176,16 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             </p>
 
             <p>
+                <TextField
+                    name="email field" label="Email"
+                    onChange={(event) => { setEmail(event.target.value) }}
+                    error={emailError}
+                    helperText={emailHelper}
+                    onBlur={onEmailFieldUnfocused}>
+                </TextField>
+            </p>
+
+            <p>
                 <ReactPhoneInput
                     component={TextField}
                     value={phone}
@@ -199,7 +227,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             <p>
                 {country && countries && <Select
                     value={country}
-                    onChange={(event) => { console.log(event); setCountry(event.target.value) }}>
+                    onChange={(event) => { setCountry(event.target.value) }}>
                     {
                         Object.keys(countries).map((countryCode) => {
                             return <MenuItem value={countryCode} key={countryCode}>{countries[countryCode]}</MenuItem>
@@ -211,7 +239,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             <p>
                 {region && regions && <Select
                     value={region}
-                    onChange={(event) => { console.log(event); setRegion(event.target.value) }}>
+                    onChange={(event) => { setRegion(event.target.value) }}>
                     {
                         Object.keys(regions).map((regionCode) => {
                             return <MenuItem value={regionCode} key={regionCode}>{regions[regionCode]}</MenuItem>
@@ -223,7 +251,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             <p>
                 {shippingMethod && shippingMethods && <Select
                     value={shippingMethod}
-                    onChange={(event) => { console.log(event); setShippingMethod(event.target.value) }}>
+                    onChange={(event) => { setShippingMethod(event.target.value) }}>
                     {
                         shippingMethods.map((method) => {
                             return <MenuItem value={method["description"]} key={method["id"]}>{method["description"]}</MenuItem>
@@ -248,9 +276,10 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                     () => {
 
                         if (phoneEntryIsValid && nameEntryIsValid && cityEntryIsValid
-                            && addressEntryIsValid && zipEntryIsValid) {
+                            && addressEntryIsValid && zipEntryIsValid && emailEntryIsValid) {
                             setShippingInfo({
                                 "name": name,
+                                "email": email,
                                 "phone": phone,
                                 "address": address,
                                 "city": city,
@@ -264,6 +293,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                         else {
 
                             onNameFieldUnfocused();
+                            onEmailFieldUnfocused();
                             onPhoneFieldUnfocused();
                             onAddressFieldUnfocused();
                             onCityFieldUnfocused();

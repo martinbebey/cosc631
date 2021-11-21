@@ -1,18 +1,67 @@
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { commerce } from "./../lib/commerce";
 import { useEffect, useState } from 'react';
 import ShippingForm from "./shippingForm";
+import PaymentForm from "./paymentForm";
 
 function Checkout({ cart }) {
-    const [checkoutToken, setToken] = useState({});
+    const [checkout, setCheckout] = useState({});
+    const [checkoutToken, setCheckoutToken] = useState("");
     const [shippingInfo, setShippingInfo] = useState({});
     useEffect(() => {
         commerce.checkout.generateToken(cart.id, { "type": "cart" }).then((response) => {
-            console.log(response);
-            console.log(response.id);
-            setToken(response.id);
+            // console.log(response);
+            // console.log(response.id);
+            setCheckout(response);
+            setCheckoutToken(response.id);
         });
     }, [cart.id]);
+
+    const [paymentMethod, setPaymentMethod] = useState({});
+
+    const handlePlaceOrder = (checkout, shippingInfo, paymentMethod) => 
+    {
+        console.log(checkout);
+        console.log(shippingInfo);
+        console.log(paymentMethod);
+
+        const orderData = {
+            "line_items": checkout.live.line_items,
+            "customer": {
+                "email": shippingInfo["email"]
+            },
+            "shipping": {
+                "name": shippingInfo["name"],
+                "street": shippingInfo["address"],
+                "town_city": shippingInfo["city"],
+                "country_state": shippingInfo["region"],
+                "postal_zip_code": shippingInfo["zip"],
+                "country": shippingInfo["country"],
+            },
+            "fulfillment": {
+                "shipping_method": shippingInfo["shipping"],
+            },
+            "payment": {
+                "gateway": 'stripe',
+                "stripe": {
+                    "payment_method_id": paymentMethod["id"]
+                }
+            }
+        };
+
+        console.log(orderData);
+
+        commerce.checkout.capture(checkoutToken, orderData).then(
+            (response) => {
+                console.log(response);
+            }
+        )
+    }
+
+    if(!checkoutToken)
+    {
+        return <h4>Loading...</h4>
+    }
 
     return (
 
@@ -22,7 +71,7 @@ function Checkout({ cart }) {
             </Grid>
 
             <Grid item>
-                <ShippingForm checkoutToken={checkoutToken} setShippingInfo={setShippingInfo}/>
+                { checkoutToken && <ShippingForm checkoutToken={checkoutToken} setShippingInfo={setShippingInfo}/>}
                 <p>Submission summary:</p>
                 {shippingInfo["country"] && <p>country: {shippingInfo["country"]}</p>}
                 {shippingInfo["name"] && <p>name: {shippingInfo["name"]}</p>}
@@ -32,14 +81,15 @@ function Checkout({ cart }) {
                 {shippingInfo["address"] && <p>address: {shippingInfo["address"]}</p>}
                 {shippingInfo["region"] && <p>region: {shippingInfo["region"]}</p>}
                 {shippingInfo["shipping"] && <p>shipping: {shippingInfo["shipping"]}</p>}
+                {shippingInfo["email"] && <p>email: {shippingInfo["email"]}</p>}
             </Grid>
 
             <Grid item>
-                Placeholder for payment information
+                <PaymentForm setPaymentMethod={setPaymentMethod}/>
             </Grid>
 
             <Grid item>
-                Placeholder for submission
+                <Button onClick={(event) => {handlePlaceOrder(checkout, shippingInfo, paymentMethod)}}>Confirm to place order</Button>
             </Grid>
         </Grid>
     );
