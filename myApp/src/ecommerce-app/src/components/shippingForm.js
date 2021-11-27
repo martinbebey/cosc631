@@ -62,14 +62,6 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
         }
     }, [checkoutToken, country, region]);
 
-    // console.log(checkoutToken);
-    // console.log(countries);
-    // console.log(country);
-    // console.log(regions);
-    // console.log(region);
-    // console.log(shippingMethods);
-    // console.log(shippingMethod);
-
     const onNameFieldUnfocused = (event) => {
         if (!name) {
             setNameError(true);

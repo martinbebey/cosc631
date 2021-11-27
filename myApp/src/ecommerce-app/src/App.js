@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { commerce } from './lib/commerce';
 import Cart from './components/cart/cart';
 import Checkout from './components/checkout';
+import Login from './components/login';
 
 function App() {
 
@@ -98,6 +99,10 @@ function App() {
 
                   <Route exact path="/checkout">
                     <Checkout cart={cart} />
+                  </Route>
+
+                  <Route exact path="/login">
+                    <Login/>
                   </Route>
                 </Switch>
               </BrowserRouter>
