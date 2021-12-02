@@ -1,7 +1,4 @@
 import { Button, Grid, makeStyles } from "@material-ui/core";
-// import { useEffect, useState } from 'react';
-// import { commerce } from './../../lib/commerce';
-// import { useParams } from "react-router";
 
 const useStyles = makeStyles({
     image: {

@@ -14,10 +14,12 @@ import { commerce } from './lib/commerce';
 import Cart from './components/cart/cart';
 import Checkout from './components/checkout';
 import Login from './components/login';
+import Home from './components/home';
 
 function App() {
 
   const [cart, setCart] = useState({});
+
   useEffect(() => {
     commerce.cart.retrieve().then(
       (response) => {
@@ -103,6 +105,10 @@ function App() {
 
                   <Route exact path="/login">
                     <Login/>
+                  </Route>
+
+                  <Route exact path="/user/:loginToken">
+                    <Home/>
                   </Route>
                 </Switch>
               </BrowserRouter>

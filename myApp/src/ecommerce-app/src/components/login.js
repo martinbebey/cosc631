@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, Grid } from '@material-ui/core';
 import { commerce } from '../lib/commerce';
 
 function Login() {
@@ -7,7 +7,8 @@ function Login() {
     const [emailError, setEmailError] = useState(false);
     const [emailHelper, setEmailHelper] = useState("");
     const [emailEntryIsValid, setEmailEntryIsValid] = useState(false);
-    const url = "http://localhost:3000/login/callback";
+    const [loginToken, setLoginToken] = useState("");
+    const url = "http://localhost:3000/user";
 
     const onEmailFieldUnfocused = (event) => {
         if (!email) {
@@ -24,36 +25,44 @@ function Login() {
     }
 
     return (
-        <div>
-            <h4>Login</h4>
+        <Grid item>
+            {!loginToken && <div>
+                <h4>Login</h4>
 
-            <p>
-                <TextField
-                    name="email field" label="Please enter your email"
-                    onChange={(event) => { setEmail(event.target.value) }}
-                    error={emailError}
-                    helperText={emailHelper}
-                    onBlur={onEmailFieldUnfocused}>
-                </TextField>
-            </p>
+                <p>
+                    <TextField
+                        name="email field" label="Please enter your email"
+                        onChange={(event) => { setEmail(event.target.value) }}
+                        error={emailError}
+                        helperText={emailHelper}
+                        onBlur={onEmailFieldUnfocused}>
+                    </TextField>
+                </p>
 
-            <p>
-                <Button onClick={
-                    () => {
+                <p>
+                    <Button onClick={
+                        () => {
 
-                        if (emailEntryIsValid) {
-                            commerce.customer.login(email, url).then((token) => console.log(token));                            
+                            if (emailEntryIsValid) {
+                                commerce.customer.login(email, url).then((token) => 
+                                {
+                                    console.log(token);
+                                    setLoginToken(token);
+                                });
+                            }
+
+                            else {
+                                onEmailFieldUnfocused();
+                            }
                         }
+                    }>
+                        Get Login Token
+                    </Button>
+                </p>
+            </div>}
 
-                        else {
-                            onEmailFieldUnfocused();
-                        }
-                    }
-                }>
-                    Get Login Token
-                </Button>
-            </p>
-        </div>
+            {loginToken && <h5>An email is sent to your email address.</h5>}
+        </Grid>
     )
 }
 

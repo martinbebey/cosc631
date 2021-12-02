@@ -10,8 +10,6 @@ function Checkout({ cart }) {
     const [shippingInfo, setShippingInfo] = useState({});
     useEffect(() => {
         commerce.checkout.generateToken(cart.id, { "type": "cart" }).then((response) => {
-            // console.log(response);
-            // console.log(response.id);
             setCheckout(response);
             setCheckoutToken(response.id);
         });
@@ -34,7 +32,7 @@ function Checkout({ cart }) {
                 "name": shippingInfo["name"],
                 "street": shippingInfo["address"],
                 "town_city": shippingInfo["city"],
-                "country_state": shippingInfo["region"],
+                "county_state": shippingInfo["region"],
                 "postal_zip_code": shippingInfo["zip"],
                 "country": shippingInfo["country"],
             },

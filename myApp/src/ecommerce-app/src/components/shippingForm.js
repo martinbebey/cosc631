@@ -57,7 +57,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
         if (country && region) {
             commerce.checkout.getShippingOptions(checkoutToken, { "country": country, "region]": region }).then((response) => {
                 setShippingMethods(response);
-                setShippingMethod(response[0].description);
+                setShippingMethod(response[0]["id"]);
             });
         }
     }, [checkoutToken, country, region]);
@@ -184,6 +184,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                     onChange={(enteredPhoneNumber) => { setPhone(enteredPhoneNumber) }}
                     inputProps={
                         {
+                            fullWidth: false,
                             name: "phone field",
                             error: phoneError,
                             helperText: phoneHelper,
@@ -246,7 +247,7 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                     onChange={(event) => { setShippingMethod(event.target.value) }}>
                     {
                         shippingMethods.map((method) => {
-                            return <MenuItem value={method["description"]} key={method["id"]}>{method["description"]}</MenuItem>
+                            return <MenuItem value={method["id"]} key={method["id"]}>{method["description"]}</MenuItem>
                         })
                     }
                 </Select>}
