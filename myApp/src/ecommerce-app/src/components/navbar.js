@@ -3,15 +3,8 @@ import StorefrontIcon from '@material-ui/icons/Storefront';
 import ShoppingCartTwoToneIcon from '@material-ui/icons/ShoppingCartTwoTone';
 import { Button } from "@material-ui/core";
 import { commerce } from "../lib/commerce";
-import { useState, useEffect } from "react";
 
-function Navbar({ cartItems }) {
-    const [loggedIn, setLoggedIn] = useState({});
-    const isLoggedIn = commerce.customer.isLoggedIn();
-
-    useEffect(() => {
-            setLoggedIn(commerce.customer.isLoggedIn());
-    }, [isLoggedIn]);
+function Navbar({ cartItems, loggedIn}) {
 
     return (
         <AppBar position="static">

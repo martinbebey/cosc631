@@ -19,6 +19,8 @@ import Home from './components/home';
 function App() {
 
   const [cart, setCart] = useState({});
+  const [loggedIn, setLoggedIn] = useState({});
+  const isLoggedIn = commerce.customer.isLoggedIn();
 
   useEffect(() => {
     commerce.cart.retrieve().then(
@@ -28,6 +30,10 @@ function App() {
       }
     );
   }, []);
+
+  useEffect(() => {
+          setLoggedIn(commerce.customer.isLoggedIn());
+  }, [isLoggedIn]);
 
   const handleAddToCart = (productId, quantity) => {
     commerce.cart.add(productId, quantity).then(
@@ -70,7 +76,7 @@ function App() {
       <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <header>
-            <Navbar cartItems={cart.total_items} />
+            <Navbar cartItems={cart.total_items} loggedIn={loggedIn} />
           </header>
         </Grid>
 
