@@ -22,6 +22,10 @@ function Navbar({ cartItems, loggedIn}) {
                     </IconButton>
                 </Typography>
 
+                <Button style={{ color: "white" }} href="/orders">
+                    ORDERS
+                </Button>
+
                 {!loggedIn && <Button style={{ color: "white" }} href="/login">
                     LOGIN
                 </Button>}
