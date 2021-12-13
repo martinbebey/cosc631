@@ -15,7 +15,6 @@ import Cart from './components/cart/cart';
 import Checkout from './components/checkout';
 import Login from './components/login';
 import Home from './components/home';
-import Orders from './components/orders';
 
 function App() {
 
@@ -114,12 +113,8 @@ function App() {
                     <Login/>
                   </Route>
 
-                  <Route exact path="/home/:loginToken">
+                  <Route exact path= {["/orders", "/home/:loginToken", "/home"]}>
                     <Home/>
-                  </Route>
-
-                  <Route exact path="/home">
-                    <Orders/>
                   </Route>
                 </Switch>
               </BrowserRouter>

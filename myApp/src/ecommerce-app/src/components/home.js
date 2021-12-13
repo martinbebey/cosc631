@@ -12,7 +12,7 @@ function Home() {
         commerce.customer.getToken(loginToken).then((jwt) => {
             console.log(jwt);
         });
-    }, [loginToken]);
+    });
 
     useEffect(() => {
         commerce.customer.about().then((customer) => {
@@ -24,6 +24,7 @@ function Home() {
 
     return (
         <Grid item>
+            {!customerEmail && <p>Please log in to view your order history</p>}
             {customerEmail && <Orders/>}
         </Grid>
 

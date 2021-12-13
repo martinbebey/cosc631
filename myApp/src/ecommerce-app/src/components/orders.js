@@ -32,13 +32,11 @@ function Orders() {
                 </Grid>
 
                 <div>
-                    {/* <Grid container spacing={2}> */}
                     {
                         orders.map((order) => {
                             return <OrderItem order={order} />
                         })
                     }
-                    {/* </Grid> */}
                 </div>
             </div>}
         </div>
