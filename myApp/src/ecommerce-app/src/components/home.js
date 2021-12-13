@@ -2,6 +2,7 @@ import { Grid } from "@material-ui/core";
 import { useParams } from "react-router";
 import { commerce } from "../lib/commerce";
 import { useEffect, useState } from 'react';
+import Orders from "./orders";
 
 function Home() {
     const { loginToken } = useParams();
@@ -23,8 +24,7 @@ function Home() {
 
     return (
         <Grid item>
-            <h5> Home </h5>
-            {customerEmail && <h5> Welcome! {customerEmail} </h5>}
+            {customerEmail && <Orders/>}
         </Grid>
 
     );

@@ -8,7 +8,7 @@ function Login() {
     const [emailHelper, setEmailHelper] = useState("");
     const [emailEntryIsValid, setEmailEntryIsValid] = useState(false);
     const [loginToken, setLoginToken] = useState("");
-    const url = "http://localhost:3000/user";
+    const url = "http://localhost:3000/home";
 
     const onEmailFieldUnfocused = (event) => {
         if (!email) {

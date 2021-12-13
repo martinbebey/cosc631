@@ -114,11 +114,11 @@ function App() {
                     <Login/>
                   </Route>
 
-                  <Route exact path="/user/:loginToken">
+                  <Route exact path="/home/:loginToken">
                     <Home/>
                   </Route>
 
-                  <Route exact path="/orders">
+                  <Route exact path="/home">
                     <Orders/>
                   </Route>
                 </Switch>
