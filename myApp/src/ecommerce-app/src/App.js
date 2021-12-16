@@ -106,7 +106,7 @@ function App() {
                   </Route>
 
                   <Route exact path="/checkout">
-                    <Checkout cart={cart} />
+                    <Checkout cart={cart} loggedIn={loggedIn}/>
                   </Route>
 
                   <Route exact path="/login">

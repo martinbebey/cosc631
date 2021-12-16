@@ -4,10 +4,16 @@ import { useEffect, useState } from 'react';
 import ShippingForm from "./shippingForm";
 import PaymentForm from "./paymentForm";
 
-function Checkout({ cart }) {
+function Checkout({ cart, loggedIn }) {
     const [checkout, setCheckout] = useState({});
     const [checkoutToken, setCheckoutToken] = useState("");
     const [shippingInfo, setShippingInfo] = useState({});
+    const [paymentMethod, setPaymentMethod] = useState({});
+    const [customerID, setCustomerID] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [token, setToken] = useState("");
+    // const url = "http://localhost:3000/checkout";
+
     useEffect(() => {
         commerce.checkout.generateToken(cart.id, { "type": "cart" }).then((response) => {
             setCheckout(response);
@@ -15,10 +21,32 @@ function Checkout({ cart }) {
         });
     }, [cart.id]);
 
-    const [paymentMethod, setPaymentMethod] = useState({});
+    useEffect(() => {
+        if (!loggedIn && customerID)//consider as new customer
+        {
+            // console.log(customerID);
+            // console.log(email);
 
-    const handlePlaceOrder = (checkout, shippingInfo, paymentMethod) => 
-    {
+            // //to resolve the error "access token must be provided when customer is not logged in"
+            // //provided customerID/null values to update function and it did not work
+            // commerce.customer.login(email, url).then((token) => {
+            //     console.log(token);
+            //     setToken(token);
+            // });
+
+            commerce.customer.update({
+                firstname: shippingInfo["name"].split(" ")[0],
+                lastname: shippingInfo["name"].split(" ")[1],
+                phone: shippingInfo["phone"],
+            }, null).then((customer) => {
+                console.log(customer)
+            });
+
+            // commerce.customer.logout();
+        }
+    }, [customerID, loggedIn, shippingInfo]);
+
+    const handlePlaceOrder = (checkout, shippingInfo, paymentMethod) => {
         console.log(checkout);
         console.log(shippingInfo);
         console.log(paymentMethod);
@@ -52,12 +80,14 @@ function Checkout({ cart }) {
         commerce.checkout.capture(checkoutToken, orderData).then(
             (response) => {
                 console.log(response);
+                setCustomerID(response.customer.id);
+                // setEmail(response.customer.email);
+                // console.log(response.customer.email);
             }
-        )
+        );
     }
 
-    if(!checkoutToken)
-    {
+    if (!checkoutToken) {
         return <h4>Loading...</h4>
     }
 
@@ -69,7 +99,7 @@ function Checkout({ cart }) {
             </Grid>
 
             <Grid item>
-                { checkoutToken && <ShippingForm checkoutToken={checkoutToken} setShippingInfo={setShippingInfo}/>}
+                {checkoutToken && <ShippingForm checkoutToken={checkoutToken} setShippingInfo={setShippingInfo} />}
                 <p>Submission summary:</p>
                 {shippingInfo["country"] && <p>country: {shippingInfo["country"]}</p>}
                 {shippingInfo["name"] && <p>name: {shippingInfo["name"]}</p>}
@@ -83,11 +113,11 @@ function Checkout({ cart }) {
             </Grid>
 
             <Grid item>
-                <PaymentForm setPaymentMethod={setPaymentMethod}/>
+                <PaymentForm setPaymentMethod={setPaymentMethod} />
             </Grid>
 
             <Grid item>
-                <Button onClick={(event) => {handlePlaceOrder(checkout, shippingInfo, paymentMethod)}}>Confirm to place order</Button>
+                <Button onClick={(event) => { handlePlaceOrder(checkout, shippingInfo, paymentMethod) }}>Confirm to place order</Button>
             </Grid>
         </Grid>
     );
