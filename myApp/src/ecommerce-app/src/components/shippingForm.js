@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { commerce } from "./../lib/commerce";
-import { Button, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, MenuItem, Select, TextField, makeStyles } from "@material-ui/core";
 import ReactPhoneInput from "react-phone-input-material-ui";
 
-function ShippingForm({ checkoutToken, setShippingInfo }) {
+function ShippingForm({ checkoutToken, setShippingInfo, customerName, loggedIn, customerEmail, customerPhone }) {
     const [country, setCountry] = useState("");
     const [countries, setCountries] = useState(undefined);
     const [region, setRegion] = useState("");
@@ -34,6 +34,15 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
     const [cityEntryIsValid, setCityEntryIsValid] = useState(false);
     const [addressEntryIsValid, setAddressEntryIsValid] = useState(false);
     const [zipEntryIsValid, setZipEntryIsValid] = useState(false);
+
+    //style for the text for prefilled fields
+    const useStyles = makeStyles({
+        textColor: {
+            color: 'gray'
+        }
+    });
+
+    const classes = useStyles();
 
     useEffect(() => {
         if (checkoutToken) {
@@ -158,27 +167,43 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
             <p>Shipping Form</p>
 
             <p>
-                <TextField
-                    name="name field" label="Full Name"
+                {!customerName && <TextField
+                    name="name field" 
+                    label="Full Name"
                     onChange={(event) => { setName(event.target.value) }}
                     error={nameError}
                     helperText={nameHelper}
                     onBlur={onNameFieldUnfocused}>
-                </TextField>
+                </TextField>}
+
+                {customerName && <TextField
+                    name="name field"
+                    label="Full Name"
+                    value={customerName}
+                    InputProps={{ className: classes.textColor }}>
+                </TextField>}
             </p>
 
             <p>
-                <TextField
-                    name="email field" label="Email"
+                {!customerPhone && <TextField
+                    name="email field" 
+                    label="Email"
                     onChange={(event) => { setEmail(event.target.value) }}
                     error={emailError}
                     helperText={emailHelper}
                     onBlur={onEmailFieldUnfocused}>
-                </TextField>
+                </TextField>}
+
+                {customerPhone && <TextField
+                    name="email field"
+                    label="Email"
+                    value={customerEmail}
+                    InputProps={{ className: classes.textColor }}>
+                </TextField>}
             </p>
 
             <p>
-                <ReactPhoneInput
+                {!customerPhone && <ReactPhoneInput
                     component={TextField}
                     value={phone}
                     onChange={(enteredPhoneNumber) => { setPhone(enteredPhoneNumber) }}
@@ -192,7 +217,20 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                         }
                     }
                 >
-                </ReactPhoneInput>
+                </ReactPhoneInput>}
+
+                {customerPhone && <TextField
+                    label="Phone"
+                    value={customerPhone}
+                    inputProps={
+                        {
+                            fullWidth: false,
+                            name: "phone field",
+                            className: classes.textColor
+                        }
+                    }
+                >
+                </TextField>}
             </p>
 
             <p>
@@ -268,8 +306,24 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                 <Button onClick={
                     () => {
 
-                        if (phoneEntryIsValid && nameEntryIsValid && cityEntryIsValid
+                        if (loggedIn && cityEntryIsValid && addressEntryIsValid && zipEntryIsValid) 
+                        {
+                            setShippingInfo({
+                                "name": customerName,
+                                "email": customerEmail,
+                                "phone": customerPhone,
+                                "address": address,
+                                "city": city,
+                                "country": country,
+                                "region": region,
+                                "shipping": shippingMethod,
+                                "zip": zipCode
+                            });
+                        }
+                
+                        else if (phoneEntryIsValid && nameEntryIsValid && cityEntryIsValid
                             && addressEntryIsValid && zipEntryIsValid && emailEntryIsValid) {
+                            console.log("setting shipping info")
                             setShippingInfo({
                                 "name": name,
                                 "email": email,
@@ -284,7 +338,6 @@ function ShippingForm({ checkoutToken, setShippingInfo }) {
                         }
 
                         else {
-
                             onNameFieldUnfocused();
                             onEmailFieldUnfocused();
                             onPhoneFieldUnfocused();

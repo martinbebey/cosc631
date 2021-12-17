@@ -15,6 +15,7 @@ import Cart from './components/cart/cart';
 import Checkout from './components/checkout';
 import Login from './components/login';
 import Home from './components/home';
+import Profile from './components/profile';
 
 function App() {
 
@@ -88,8 +89,6 @@ function App() {
             <main>
               <h1>COSC 631 eCommerce</h1>
 
-
-
               <BrowserRouter>
                 <Switch>
                   <Route exact path="/products">
@@ -115,6 +114,10 @@ function App() {
 
                   <Route exact path= {["/orders", "/home/:loginToken", "/home"]}>
                     <Home/>
+                  </Route>
+
+                  <Route exact path="/profile">
+                    <Profile loggedIn={loggedIn}/>
                   </Route>
                 </Switch>
               </BrowserRouter>

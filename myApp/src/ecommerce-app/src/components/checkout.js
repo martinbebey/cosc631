@@ -9,10 +9,9 @@ function Checkout({ cart, loggedIn }) {
     const [checkoutToken, setCheckoutToken] = useState("");
     const [shippingInfo, setShippingInfo] = useState({});
     const [paymentMethod, setPaymentMethod] = useState({});
-    const [customerID, setCustomerID] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [token, setToken] = useState("");
-    // const url = "http://localhost:3000/checkout";
+    const [customerEmail, setCustomerEmail] = useState("");
+    const [customerName, setCustomerName] = useState("");
+    const [customerPhone, setCustomerPhone] = useState("");
 
     useEffect(() => {
         commerce.checkout.generateToken(cart.id, { "type": "cart" }).then((response) => {
@@ -21,30 +20,14 @@ function Checkout({ cart, loggedIn }) {
         });
     }, [cart.id]);
 
+    //if customer is logged in, get the name, email and phone
     useEffect(() => {
-        if (!loggedIn && customerID)//consider as new customer
-        {
-            // console.log(customerID);
-            // console.log(email);
-
-            // //to resolve the error "access token must be provided when customer is not logged in"
-            // //provided customerID/null values to update function and it did not work
-            // commerce.customer.login(email, url).then((token) => {
-            //     console.log(token);
-            //     setToken(token);
-            // });
-
-            commerce.customer.update({
-                firstname: shippingInfo["name"].split(" ")[0],
-                lastname: shippingInfo["name"].split(" ")[1],
-                phone: shippingInfo["phone"],
-            }, null).then((customer) => {
-                console.log(customer)
-            });
-
-            // commerce.customer.logout();
-        }
-    }, [customerID, loggedIn, shippingInfo]);
+        commerce.customer.about().then((customer) => {
+            setCustomerEmail(customer.email);
+            setCustomerName(customer.firstname + " " + customer.lastname);
+            setCustomerPhone(customer.phone);
+        });
+    });
 
     const handlePlaceOrder = (checkout, shippingInfo, paymentMethod) => {
         console.log(checkout);
@@ -75,14 +58,18 @@ function Checkout({ cart, loggedIn }) {
             }
         };
 
+        //save new customer info
+        if (!loggedIn) {
+            orderData.customer.phone = shippingInfo["phone"];
+            orderData.customer.firstname = shippingInfo["name"].split(" ")[0];
+            orderData.customer.lastname = shippingInfo["name"].split(" ")[1];
+        }
+
         console.log(orderData);
 
         commerce.checkout.capture(checkoutToken, orderData).then(
             (response) => {
                 console.log(response);
-                setCustomerID(response.customer.id);
-                // setEmail(response.customer.email);
-                // console.log(response.customer.email);
             }
         );
     }
@@ -99,7 +86,11 @@ function Checkout({ cart, loggedIn }) {
             </Grid>
 
             <Grid item>
-                {checkoutToken && <ShippingForm checkoutToken={checkoutToken} setShippingInfo={setShippingInfo} />}
+                {checkoutToken && <ShippingForm checkoutToken={checkoutToken}
+                    setShippingInfo={setShippingInfo} loggedIn={loggedIn}
+                    customerName={customerName} customerEmail={customerEmail}
+                    customerPhone={customerPhone} />
+                }
                 <p>Submission summary:</p>
                 {shippingInfo["country"] && <p>country: {shippingInfo["country"]}</p>}
                 {shippingInfo["name"] && <p>name: {shippingInfo["name"]}</p>}
