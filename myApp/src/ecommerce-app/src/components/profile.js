@@ -39,13 +39,14 @@ function Profile({ loggedIn }) {
 
     const classes = useStyles();
 
+    //if a customer is logged in, get their name email and phone
     useEffect(() => {
         commerce.customer.about().then((customer) => {
             setCustomerEmail(customer.email);
             setCustomerName(customer.firstname + " " + customer.lastname);
             setCustomerPhone(customer.phone);
         });
-    });
+    }, []);
 
     const onNameFieldUnfocused = (event) => {
         if (!customerName) {
@@ -106,7 +107,7 @@ function Profile({ loggedIn }) {
                         name="name field"
                         label="Full Name"
                         value={customerName}
-                        onChange={(event) => {setCustomerName(event.target.value) }}
+                        onChange={(event) => { setCustomerName(event.target.value) }}
                         error={nameError}
                         helperText={nameHelper}
                         onBlur={onNameFieldUnfocused}>
